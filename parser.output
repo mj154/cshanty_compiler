@@ -1,0 +1,2118 @@
+Grammar
+
+    0 $accept: program "end file"
+
+    1 program: globals
+
+    2 globals: globals decl
+    3        | %empty
+
+    4 decl: varDecl
+    5     | fnDecl
+    6     | recordDecl
+
+    7 recordDecl: RECORD id OPEN varDeclList CLOSE
+
+    8 varDecl: type id SEMICOL
+
+    9 varDeclList: varDecl
+   10            | varDeclList varDecl
+
+   11 type: INT
+   12     | BOOL
+   13     | id
+   14     | STRING
+   15     | VOID
+
+   16 fnDecl: type id LPAREN RPAREN OPEN stmtList CLOSE
+   17       | type id LPAREN formals RPAREN OPEN stmtList CLOSE
+
+   18 formals: formalDecl
+   19        | formals COMMA formalDecl
+
+   20 formalDecl: type id
+
+   21 stmtList: %empty
+   22         | stmtList stmt
+
+   23 stmt: varDecl
+   24     | assignExp SEMICOL
+   25     | lval DEC SEMICOL
+   26     | lval INC SEMICOL
+   27     | RECEIVE lval SEMICOL
+   28     | REPORT exp SEMICOL
+   29     | IF LPAREN exp RPAREN OPEN stmtList CLOSE
+   30     | IF LPAREN exp RPAREN OPEN stmtList CLOSE ELSE OPEN stmtList CLOSE
+   31     | WHILE LPAREN exp RPAREN OPEN stmtList CLOSE
+   32     | RETURN exp SEMICOL
+   33     | RETURN SEMICOL
+   34     | callExp SEMICOL
+
+   35 exp: assignExp
+   36    | exp MINUS exp
+   37    | exp PLUS exp
+   38    | exp TIMES exp
+   39    | exp DIVIDE exp
+   40    | exp AND exp
+   41    | exp OR exp
+   42    | exp EQUALS exp
+   43    | exp NOTEQUALS exp
+   44    | exp GREATER exp
+   45    | exp GREATEREQ exp
+   46    | exp LESS exp
+   47    | exp LESSEQ exp
+   48    | NOT exp
+   49    | MINUS term
+   50    | term
+
+   51 assignExp: lval ASSIGN exp
+
+   52 callExp: id LPAREN RPAREN
+   53        | id LPAREN actualsList RPAREN
+
+   54 actualsList: exp
+   55            | actualsList COMMA exp
+
+   56 term: lval
+   57     | INTLITERAL
+   58     | STRLITERAL
+   59     | TRUE
+   60     | FALSE
+   61     | LPAREN exp RPAREN
+   62     | callExp
+
+   63 lval: id
+   64     | id LBRACE id RBRACE
+
+   65 id: ID
+
+
+Terminals, with rules where they appear
+
+    "end file" (0) 0
+    error (256)
+    AND <transToken> (258) 40
+    ASSIGN <transToken> (259) 51
+    BOOL <transToken> (260) 12
+    CLOSE <transToken> (261) 7 16 17 29 30 31
+    COMMA <transToken> (262) 19 55
+    DEC <transToken> (263) 25
+    DIVIDE <transToken> (264) 39
+    ELSE <transToken> (265) 30
+    EQUALS <transToken> (266) 42
+    FALSE <transToken> (267) 60
+    GREATER <transToken> (268) 44
+    GREATEREQ <transToken> (269) 45
+    ID <transIDToken> (270) 65
+    IF <transToken> (271) 29 30
+    INC <transToken> (272) 26
+    INT <transToken> (273) 11
+    INTLITERAL <transIntToken> (274) 57
+    LBRACE <transToken> (275) 64
+    LESS <transToken> (276) 46
+    LESSEQ <transToken> (277) 47
+    LPAREN <transToken> (278) 16 17 29 30 31 52 53 61
+    MINUS <transToken> (279) 36 49
+    NOT <transToken> (280) 48
+    NOTEQUALS <transToken> (281) 43
+    OPEN <transToken> (282) 7 16 17 29 30 31
+    OR <transToken> (283) 41
+    PLUS <transToken> (284) 37
+    RBRACE <transToken> (285) 64
+    RECEIVE <transToken> (286) 27
+    RECORD <transToken> (287) 7
+    REPORT <transToken> (288) 28
+    RETURN <transToken> (289) 32 33
+    RPAREN <transToken> (290) 16 17 29 30 31 52 53 61
+    SEMICOL <transToken> (291) 8 24 25 26 27 28 32 33 34
+    STRING <transToken> (292) 14
+    STRLITERAL <transStrToken> (293) 58
+    TIMES <transToken> (294) 38
+    TRUE <transToken> (295) 59
+    VOID <transToken> (296) 15
+    WHILE <transToken> (297) 31
+
+
+Nonterminals, with rules where they appear
+
+    $accept (43)
+        on left: 0
+    program <transProgram> (44)
+        on left: 1
+        on right: 0
+    globals <transDeclList> (45)
+        on left: 2 3
+        on right: 1 2
+    decl <transDecl> (46)
+        on left: 4 5 6
+        on right: 2
+    recordDecl <transRecordDecl> (47)
+        on left: 7
+        on right: 6
+    varDecl <transVarDecl> (48)
+        on left: 8
+        on right: 4 9 10 23
+    varDeclList <transVarDeclList> (49)
+        on left: 9 10
+        on right: 7 10
+    type <transType> (50)
+        on left: 11 12 13 14 15
+        on right: 8 16 17 20
+    fnDecl <transFn> (51)
+        on left: 16 17
+        on right: 5
+    formals <transFormalList> (52)
+        on left: 18 19
+        on right: 17 19
+    formalDecl <transFormal> (53)
+        on left: 20
+        on right: 18 19
+    stmtList <transStmts> (54)
+        on left: 21 22
+        on right: 16 17 22 29 30 31
+    stmt <transStmt> (55)
+        on left: 23 24 25 26 27 28 29 30 31 32 33 34
+        on right: 22
+    exp <transExp> (56)
+        on left: 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50
+        on right: 28 29 30 31 32 36 37 38 39 40 41 42 43 44 45 46 47 48 51 54 55 61
+    assignExp <transAssignExp> (57)
+        on left: 51
+        on right: 24 35
+    callExp <transCallExp> (58)
+        on left: 52 53
+        on right: 34 62
+    actualsList <transActuals> (59)
+        on left: 54 55
+        on right: 53 55
+    term <transExp> (60)
+        on left: 56 57 58 59 60 61 62
+        on right: 49 50
+    lval <transLVal> (61)
+        on left: 63 64
+        on right: 25 26 27 51 56
+    id <transID> (62)
+        on left: 65
+        on right: 7 8 13 16 17 20 52 53 63 64
+
+
+State 0
+
+    0 $accept: . program "end file"
+
+    $default  reduce using rule 3 (globals)
+
+    program  go to state 1
+    globals  go to state 2
+
+
+State 1
+
+    0 $accept: program . "end file"
+
+    "end file"  shift, and go to state 3
+
+
+State 2
+
+    1 program: globals .
+    2 globals: globals . decl
+
+    BOOL    shift, and go to state 4
+    ID      shift, and go to state 5
+    INT     shift, and go to state 6
+    RECORD  shift, and go to state 7
+    STRING  shift, and go to state 8
+    VOID    shift, and go to state 9
+
+    $default  reduce using rule 1 (program)
+
+    decl        go to state 10
+    recordDecl  go to state 11
+    varDecl     go to state 12
+    type        go to state 13
+    fnDecl      go to state 14
+    id          go to state 15
+
+
+State 3
+
+    0 $accept: program "end file" .
+
+    $default  accept
+
+
+State 4
+
+   12 type: BOOL .
+
+    $default  reduce using rule 12 (type)
+
+
+State 5
+
+   65 id: ID .
+
+    $default  reduce using rule 65 (id)
+
+
+State 6
+
+   11 type: INT .
+
+    $default  reduce using rule 11 (type)
+
+
+State 7
+
+    7 recordDecl: RECORD . id OPEN varDeclList CLOSE
+
+    ID  shift, and go to state 5
+
+    id  go to state 16
+
+
+State 8
+
+   14 type: STRING .
+
+    $default  reduce using rule 14 (type)
+
+
+State 9
+
+   15 type: VOID .
+
+    $default  reduce using rule 15 (type)
+
+
+State 10
+
+    2 globals: globals decl .
+
+    $default  reduce using rule 2 (globals)
+
+
+State 11
+
+    6 decl: recordDecl .
+
+    $default  reduce using rule 6 (decl)
+
+
+State 12
+
+    4 decl: varDecl .
+
+    $default  reduce using rule 4 (decl)
+
+
+State 13
+
+    8 varDecl: type . id SEMICOL
+   16 fnDecl: type . id LPAREN RPAREN OPEN stmtList CLOSE
+   17       | type . id LPAREN formals RPAREN OPEN stmtList CLOSE
+
+    ID  shift, and go to state 5
+
+    id  go to state 17
+
+
+State 14
+
+    5 decl: fnDecl .
+
+    $default  reduce using rule 5 (decl)
+
+
+State 15
+
+   13 type: id .
+
+    $default  reduce using rule 13 (type)
+
+
+State 16
+
+    7 recordDecl: RECORD id . OPEN varDeclList CLOSE
+
+    OPEN  shift, and go to state 18
+
+
+State 17
+
+    8 varDecl: type id . SEMICOL
+   16 fnDecl: type id . LPAREN RPAREN OPEN stmtList CLOSE
+   17       | type id . LPAREN formals RPAREN OPEN stmtList CLOSE
+
+    LPAREN   shift, and go to state 19
+    SEMICOL  shift, and go to state 20
+
+
+State 18
+
+    7 recordDecl: RECORD id OPEN . varDeclList CLOSE
+
+    BOOL    shift, and go to state 4
+    ID      shift, and go to state 5
+    INT     shift, and go to state 6
+    STRING  shift, and go to state 8
+    VOID    shift, and go to state 9
+
+    varDecl      go to state 21
+    varDeclList  go to state 22
+    type         go to state 23
+    id           go to state 15
+
+
+State 19
+
+   16 fnDecl: type id LPAREN . RPAREN OPEN stmtList CLOSE
+   17       | type id LPAREN . formals RPAREN OPEN stmtList CLOSE
+
+    BOOL    shift, and go to state 4
+    ID      shift, and go to state 5
+    INT     shift, and go to state 6
+    RPAREN  shift, and go to state 24
+    STRING  shift, and go to state 8
+    VOID    shift, and go to state 9
+
+    type        go to state 25
+    formals     go to state 26
+    formalDecl  go to state 27
+    id          go to state 15
+
+
+State 20
+
+    8 varDecl: type id SEMICOL .
+
+    $default  reduce using rule 8 (varDecl)
+
+
+State 21
+
+    9 varDeclList: varDecl .
+
+    $default  reduce using rule 9 (varDeclList)
+
+
+State 22
+
+    7 recordDecl: RECORD id OPEN varDeclList . CLOSE
+   10 varDeclList: varDeclList . varDecl
+
+    BOOL    shift, and go to state 4
+    CLOSE   shift, and go to state 28
+    ID      shift, and go to state 5
+    INT     shift, and go to state 6
+    STRING  shift, and go to state 8
+    VOID    shift, and go to state 9
+
+    varDecl  go to state 29
+    type     go to state 23
+    id       go to state 15
+
+
+State 23
+
+    8 varDecl: type . id SEMICOL
+
+    ID  shift, and go to state 5
+
+    id  go to state 30
+
+
+State 24
+
+   16 fnDecl: type id LPAREN RPAREN . OPEN stmtList CLOSE
+
+    OPEN  shift, and go to state 31
+
+
+State 25
+
+   20 formalDecl: type . id
+
+    ID  shift, and go to state 5
+
+    id  go to state 32
+
+
+State 26
+
+   17 fnDecl: type id LPAREN formals . RPAREN OPEN stmtList CLOSE
+   19 formals: formals . COMMA formalDecl
+
+    COMMA   shift, and go to state 33
+    RPAREN  shift, and go to state 34
+
+
+State 27
+
+   18 formals: formalDecl .
+
+    $default  reduce using rule 18 (formals)
+
+
+State 28
+
+    7 recordDecl: RECORD id OPEN varDeclList CLOSE .
+
+    $default  reduce using rule 7 (recordDecl)
+
+
+State 29
+
+   10 varDeclList: varDeclList varDecl .
+
+    $default  reduce using rule 10 (varDeclList)
+
+
+State 30
+
+    8 varDecl: type id . SEMICOL
+
+    SEMICOL  shift, and go to state 20
+
+
+State 31
+
+   16 fnDecl: type id LPAREN RPAREN OPEN . stmtList CLOSE
+
+    $default  reduce using rule 21 (stmtList)
+
+    stmtList  go to state 35
+
+
+State 32
+
+   20 formalDecl: type id .
+
+    $default  reduce using rule 20 (formalDecl)
+
+
+State 33
+
+   19 formals: formals COMMA . formalDecl
+
+    BOOL    shift, and go to state 4
+    ID      shift, and go to state 5
+    INT     shift, and go to state 6
+    STRING  shift, and go to state 8
+    VOID    shift, and go to state 9
+
+    type        go to state 25
+    formalDecl  go to state 36
+    id          go to state 15
+
+
+State 34
+
+   17 fnDecl: type id LPAREN formals RPAREN . OPEN stmtList CLOSE
+
+    OPEN  shift, and go to state 37
+
+
+State 35
+
+   16 fnDecl: type id LPAREN RPAREN OPEN stmtList . CLOSE
+   22 stmtList: stmtList . stmt
+
+    BOOL     shift, and go to state 4
+    CLOSE    shift, and go to state 38
+    ID       shift, and go to state 5
+    IF       shift, and go to state 39
+    INT      shift, and go to state 6
+    RECEIVE  shift, and go to state 40
+    REPORT   shift, and go to state 41
+    RETURN   shift, and go to state 42
+    STRING   shift, and go to state 8
+    VOID     shift, and go to state 9
+    WHILE    shift, and go to state 43
+
+    varDecl    go to state 44
+    type       go to state 23
+    stmt       go to state 45
+    assignExp  go to state 46
+    callExp    go to state 47
+    lval       go to state 48
+    id         go to state 49
+
+
+State 36
+
+   19 formals: formals COMMA formalDecl .
+
+    $default  reduce using rule 19 (formals)
+
+
+State 37
+
+   17 fnDecl: type id LPAREN formals RPAREN OPEN . stmtList CLOSE
+
+    $default  reduce using rule 21 (stmtList)
+
+    stmtList  go to state 50
+
+
+State 38
+
+   16 fnDecl: type id LPAREN RPAREN OPEN stmtList CLOSE .
+
+    $default  reduce using rule 16 (fnDecl)
+
+
+State 39
+
+   29 stmt: IF . LPAREN exp RPAREN OPEN stmtList CLOSE
+   30     | IF . LPAREN exp RPAREN OPEN stmtList CLOSE ELSE OPEN stmtList CLOSE
+
+    LPAREN  shift, and go to state 51
+
+
+State 40
+
+   27 stmt: RECEIVE . lval SEMICOL
+
+    ID  shift, and go to state 5
+
+    lval  go to state 52
+    id    go to state 53
+
+
+State 41
+
+   28 stmt: REPORT . exp SEMICOL
+
+    FALSE       shift, and go to state 54
+    ID          shift, and go to state 5
+    INTLITERAL  shift, and go to state 55
+    LPAREN      shift, and go to state 56
+    MINUS       shift, and go to state 57
+    NOT         shift, and go to state 58
+    STRLITERAL  shift, and go to state 59
+    TRUE        shift, and go to state 60
+
+    exp        go to state 61
+    assignExp  go to state 62
+    callExp    go to state 63
+    term       go to state 64
+    lval       go to state 65
+    id         go to state 66
+
+
+State 42
+
+   32 stmt: RETURN . exp SEMICOL
+   33     | RETURN . SEMICOL
+
+    FALSE       shift, and go to state 54
+    ID          shift, and go to state 5
+    INTLITERAL  shift, and go to state 55
+    LPAREN      shift, and go to state 56
+    MINUS       shift, and go to state 57
+    NOT         shift, and go to state 58
+    SEMICOL     shift, and go to state 67
+    STRLITERAL  shift, and go to state 59
+    TRUE        shift, and go to state 60
+
+    exp        go to state 68
+    assignExp  go to state 62
+    callExp    go to state 63
+    term       go to state 64
+    lval       go to state 65
+    id         go to state 66
+
+
+State 43
+
+   31 stmt: WHILE . LPAREN exp RPAREN OPEN stmtList CLOSE
+
+    LPAREN  shift, and go to state 69
+
+
+State 44
+
+   23 stmt: varDecl .
+
+    $default  reduce using rule 23 (stmt)
+
+
+State 45
+
+   22 stmtList: stmtList stmt .
+
+    $default  reduce using rule 22 (stmtList)
+
+
+State 46
+
+   24 stmt: assignExp . SEMICOL
+
+    SEMICOL  shift, and go to state 70
+
+
+State 47
+
+   34 stmt: callExp . SEMICOL
+
+    SEMICOL  shift, and go to state 71
+
+
+State 48
+
+   25 stmt: lval . DEC SEMICOL
+   26     | lval . INC SEMICOL
+   51 assignExp: lval . ASSIGN exp
+
+    ASSIGN  shift, and go to state 72
+    DEC     shift, and go to state 73
+    INC     shift, and go to state 74
+
+
+State 49
+
+   13 type: id .
+   52 callExp: id . LPAREN RPAREN
+   53        | id . LPAREN actualsList RPAREN
+   63 lval: id .
+   64     | id . LBRACE id RBRACE
+
+    LBRACE  shift, and go to state 75
+    LPAREN  shift, and go to state 76
+
+    ID        reduce using rule 13 (type)
+    $default  reduce using rule 63 (lval)
+
+
+State 50
+
+   17 fnDecl: type id LPAREN formals RPAREN OPEN stmtList . CLOSE
+   22 stmtList: stmtList . stmt
+
+    BOOL     shift, and go to state 4
+    CLOSE    shift, and go to state 77
+    ID       shift, and go to state 5
+    IF       shift, and go to state 39
+    INT      shift, and go to state 6
+    RECEIVE  shift, and go to state 40
+    REPORT   shift, and go to state 41
+    RETURN   shift, and go to state 42
+    STRING   shift, and go to state 8
+    VOID     shift, and go to state 9
+    WHILE    shift, and go to state 43
+
+    varDecl    go to state 44
+    type       go to state 23
+    stmt       go to state 45
+    assignExp  go to state 46
+    callExp    go to state 47
+    lval       go to state 48
+    id         go to state 49
+
+
+State 51
+
+   29 stmt: IF LPAREN . exp RPAREN OPEN stmtList CLOSE
+   30     | IF LPAREN . exp RPAREN OPEN stmtList CLOSE ELSE OPEN stmtList CLOSE
+
+    FALSE       shift, and go to state 54
+    ID          shift, and go to state 5
+    INTLITERAL  shift, and go to state 55
+    LPAREN      shift, and go to state 56
+    MINUS       shift, and go to state 57
+    NOT         shift, and go to state 58
+    STRLITERAL  shift, and go to state 59
+    TRUE        shift, and go to state 60
+
+    exp        go to state 78
+    assignExp  go to state 62
+    callExp    go to state 63
+    term       go to state 64
+    lval       go to state 65
+    id         go to state 66
+
+
+State 52
+
+   27 stmt: RECEIVE lval . SEMICOL
+
+    SEMICOL  shift, and go to state 79
+
+
+State 53
+
+   63 lval: id .
+   64     | id . LBRACE id RBRACE
+
+    LBRACE  shift, and go to state 75
+
+    $default  reduce using rule 63 (lval)
+
+
+State 54
+
+   60 term: FALSE .
+
+    $default  reduce using rule 60 (term)
+
+
+State 55
+
+   57 term: INTLITERAL .
+
+    $default  reduce using rule 57 (term)
+
+
+State 56
+
+   61 term: LPAREN . exp RPAREN
+
+    FALSE       shift, and go to state 54
+    ID          shift, and go to state 5
+    INTLITERAL  shift, and go to state 55
+    LPAREN      shift, and go to state 56
+    MINUS       shift, and go to state 57
+    NOT         shift, and go to state 58
+    STRLITERAL  shift, and go to state 59
+    TRUE        shift, and go to state 60
+
+    exp        go to state 80
+    assignExp  go to state 62
+    callExp    go to state 63
+    term       go to state 64
+    lval       go to state 65
+    id         go to state 66
+
+
+State 57
+
+   49 exp: MINUS . term
+
+    FALSE       shift, and go to state 54
+    ID          shift, and go to state 5
+    INTLITERAL  shift, and go to state 55
+    LPAREN      shift, and go to state 56
+    STRLITERAL  shift, and go to state 59
+    TRUE        shift, and go to state 60
+
+    callExp  go to state 63
+    term     go to state 81
+    lval     go to state 82
+    id       go to state 66
+
+
+State 58
+
+   48 exp: NOT . exp
+
+    FALSE       shift, and go to state 54
+    ID          shift, and go to state 5
+    INTLITERAL  shift, and go to state 55
+    LPAREN      shift, and go to state 56
+    MINUS       shift, and go to state 57
+    NOT         shift, and go to state 58
+    STRLITERAL  shift, and go to state 59
+    TRUE        shift, and go to state 60
+
+    exp        go to state 83
+    assignExp  go to state 62
+    callExp    go to state 63
+    term       go to state 64
+    lval       go to state 65
+    id         go to state 66
+
+
+State 59
+
+   58 term: STRLITERAL .
+
+    $default  reduce using rule 58 (term)
+
+
+State 60
+
+   59 term: TRUE .
+
+    $default  reduce using rule 59 (term)
+
+
+State 61
+
+   28 stmt: REPORT exp . SEMICOL
+   36 exp: exp . MINUS exp
+   37    | exp . PLUS exp
+   38    | exp . TIMES exp
+   39    | exp . DIVIDE exp
+   40    | exp . AND exp
+   41    | exp . OR exp
+   42    | exp . EQUALS exp
+   43    | exp . NOTEQUALS exp
+   44    | exp . GREATER exp
+   45    | exp . GREATEREQ exp
+   46    | exp . LESS exp
+   47    | exp . LESSEQ exp
+
+    AND        shift, and go to state 84
+    DIVIDE     shift, and go to state 85
+    EQUALS     shift, and go to state 86
+    GREATER    shift, and go to state 87
+    GREATEREQ  shift, and go to state 88
+    LESS       shift, and go to state 89
+    LESSEQ     shift, and go to state 90
+    MINUS      shift, and go to state 91
+    NOTEQUALS  shift, and go to state 92
+    OR         shift, and go to state 93
+    PLUS       shift, and go to state 94
+    SEMICOL    shift, and go to state 95
+    TIMES      shift, and go to state 96
+
+
+State 62
+
+   35 exp: assignExp .
+
+    $default  reduce using rule 35 (exp)
+
+
+State 63
+
+   62 term: callExp .
+
+    $default  reduce using rule 62 (term)
+
+
+State 64
+
+   50 exp: term .
+
+    $default  reduce using rule 50 (exp)
+
+
+State 65
+
+   51 assignExp: lval . ASSIGN exp
+   56 term: lval .
+
+    ASSIGN  shift, and go to state 72
+
+    $default  reduce using rule 56 (term)
+
+
+State 66
+
+   52 callExp: id . LPAREN RPAREN
+   53        | id . LPAREN actualsList RPAREN
+   63 lval: id .
+   64     | id . LBRACE id RBRACE
+
+    LBRACE  shift, and go to state 75
+    LPAREN  shift, and go to state 76
+
+    $default  reduce using rule 63 (lval)
+
+
+State 67
+
+   33 stmt: RETURN SEMICOL .
+
+    $default  reduce using rule 33 (stmt)
+
+
+State 68
+
+   32 stmt: RETURN exp . SEMICOL
+   36 exp: exp . MINUS exp
+   37    | exp . PLUS exp
+   38    | exp . TIMES exp
+   39    | exp . DIVIDE exp
+   40    | exp . AND exp
+   41    | exp . OR exp
+   42    | exp . EQUALS exp
+   43    | exp . NOTEQUALS exp
+   44    | exp . GREATER exp
+   45    | exp . GREATEREQ exp
+   46    | exp . LESS exp
+   47    | exp . LESSEQ exp
+
+    AND        shift, and go to state 84
+    DIVIDE     shift, and go to state 85
+    EQUALS     shift, and go to state 86
+    GREATER    shift, and go to state 87
+    GREATEREQ  shift, and go to state 88
+    LESS       shift, and go to state 89
+    LESSEQ     shift, and go to state 90
+    MINUS      shift, and go to state 91
+    NOTEQUALS  shift, and go to state 92
+    OR         shift, and go to state 93
+    PLUS       shift, and go to state 94
+    SEMICOL    shift, and go to state 97
+    TIMES      shift, and go to state 96
+
+
+State 69
+
+   31 stmt: WHILE LPAREN . exp RPAREN OPEN stmtList CLOSE
+
+    FALSE       shift, and go to state 54
+    ID          shift, and go to state 5
+    INTLITERAL  shift, and go to state 55
+    LPAREN      shift, and go to state 56
+    MINUS       shift, and go to state 57
+    NOT         shift, and go to state 58
+    STRLITERAL  shift, and go to state 59
+    TRUE        shift, and go to state 60
+
+    exp        go to state 98
+    assignExp  go to state 62
+    callExp    go to state 63
+    term       go to state 64
+    lval       go to state 65
+    id         go to state 66
+
+
+State 70
+
+   24 stmt: assignExp SEMICOL .
+
+    $default  reduce using rule 24 (stmt)
+
+
+State 71
+
+   34 stmt: callExp SEMICOL .
+
+    $default  reduce using rule 34 (stmt)
+
+
+State 72
+
+   51 assignExp: lval ASSIGN . exp
+
+    FALSE       shift, and go to state 54
+    ID          shift, and go to state 5
+    INTLITERAL  shift, and go to state 55
+    LPAREN      shift, and go to state 56
+    MINUS       shift, and go to state 57
+    NOT         shift, and go to state 58
+    STRLITERAL  shift, and go to state 59
+    TRUE        shift, and go to state 60
+
+    exp        go to state 99
+    assignExp  go to state 62
+    callExp    go to state 63
+    term       go to state 64
+    lval       go to state 65
+    id         go to state 66
+
+
+State 73
+
+   25 stmt: lval DEC . SEMICOL
+
+    SEMICOL  shift, and go to state 100
+
+
+State 74
+
+   26 stmt: lval INC . SEMICOL
+
+    SEMICOL  shift, and go to state 101
+
+
+State 75
+
+   64 lval: id LBRACE . id RBRACE
+
+    ID  shift, and go to state 5
+
+    id  go to state 102
+
+
+State 76
+
+   52 callExp: id LPAREN . RPAREN
+   53        | id LPAREN . actualsList RPAREN
+
+    FALSE       shift, and go to state 54
+    ID          shift, and go to state 5
+    INTLITERAL  shift, and go to state 55
+    LPAREN      shift, and go to state 56
+    MINUS       shift, and go to state 57
+    NOT         shift, and go to state 58
+    RPAREN      shift, and go to state 103
+    STRLITERAL  shift, and go to state 59
+    TRUE        shift, and go to state 60
+
+    exp          go to state 104
+    assignExp    go to state 62
+    callExp      go to state 63
+    actualsList  go to state 105
+    term         go to state 64
+    lval         go to state 65
+    id           go to state 66
+
+
+State 77
+
+   17 fnDecl: type id LPAREN formals RPAREN OPEN stmtList CLOSE .
+
+    $default  reduce using rule 17 (fnDecl)
+
+
+State 78
+
+   29 stmt: IF LPAREN exp . RPAREN OPEN stmtList CLOSE
+   30     | IF LPAREN exp . RPAREN OPEN stmtList CLOSE ELSE OPEN stmtList CLOSE
+   36 exp: exp . MINUS exp
+   37    | exp . PLUS exp
+   38    | exp . TIMES exp
+   39    | exp . DIVIDE exp
+   40    | exp . AND exp
+   41    | exp . OR exp
+   42    | exp . EQUALS exp
+   43    | exp . NOTEQUALS exp
+   44    | exp . GREATER exp
+   45    | exp . GREATEREQ exp
+   46    | exp . LESS exp
+   47    | exp . LESSEQ exp
+
+    AND        shift, and go to state 84
+    DIVIDE     shift, and go to state 85
+    EQUALS     shift, and go to state 86
+    GREATER    shift, and go to state 87
+    GREATEREQ  shift, and go to state 88
+    LESS       shift, and go to state 89
+    LESSEQ     shift, and go to state 90
+    MINUS      shift, and go to state 91
+    NOTEQUALS  shift, and go to state 92
+    OR         shift, and go to state 93
+    PLUS       shift, and go to state 94
+    RPAREN     shift, and go to state 106
+    TIMES      shift, and go to state 96
+
+
+State 79
+
+   27 stmt: RECEIVE lval SEMICOL .
+
+    $default  reduce using rule 27 (stmt)
+
+
+State 80
+
+   36 exp: exp . MINUS exp
+   37    | exp . PLUS exp
+   38    | exp . TIMES exp
+   39    | exp . DIVIDE exp
+   40    | exp . AND exp
+   41    | exp . OR exp
+   42    | exp . EQUALS exp
+   43    | exp . NOTEQUALS exp
+   44    | exp . GREATER exp
+   45    | exp . GREATEREQ exp
+   46    | exp . LESS exp
+   47    | exp . LESSEQ exp
+   61 term: LPAREN exp . RPAREN
+
+    AND        shift, and go to state 84
+    DIVIDE     shift, and go to state 85
+    EQUALS     shift, and go to state 86
+    GREATER    shift, and go to state 87
+    GREATEREQ  shift, and go to state 88
+    LESS       shift, and go to state 89
+    LESSEQ     shift, and go to state 90
+    MINUS      shift, and go to state 91
+    NOTEQUALS  shift, and go to state 92
+    OR         shift, and go to state 93
+    PLUS       shift, and go to state 94
+    RPAREN     shift, and go to state 107
+    TIMES      shift, and go to state 96
+
+
+State 81
+
+   49 exp: MINUS term .
+
+    $default  reduce using rule 49 (exp)
+
+
+State 82
+
+   56 term: lval .
+
+    $default  reduce using rule 56 (term)
+
+
+State 83
+
+   36 exp: exp . MINUS exp
+   37    | exp . PLUS exp
+   38    | exp . TIMES exp
+   39    | exp . DIVIDE exp
+   40    | exp . AND exp
+   41    | exp . OR exp
+   42    | exp . EQUALS exp
+   43    | exp . NOTEQUALS exp
+   44    | exp . GREATER exp
+   45    | exp . GREATEREQ exp
+   46    | exp . LESS exp
+   47    | exp . LESSEQ exp
+   48    | NOT exp .
+
+    $default  reduce using rule 48 (exp)
+
+
+State 84
+
+   40 exp: exp AND . exp
+
+    FALSE       shift, and go to state 54
+    ID          shift, and go to state 5
+    INTLITERAL  shift, and go to state 55
+    LPAREN      shift, and go to state 56
+    MINUS       shift, and go to state 57
+    NOT         shift, and go to state 58
+    STRLITERAL  shift, and go to state 59
+    TRUE        shift, and go to state 60
+
+    exp        go to state 108
+    assignExp  go to state 62
+    callExp    go to state 63
+    term       go to state 64
+    lval       go to state 65
+    id         go to state 66
+
+
+State 85
+
+   39 exp: exp DIVIDE . exp
+
+    FALSE       shift, and go to state 54
+    ID          shift, and go to state 5
+    INTLITERAL  shift, and go to state 55
+    LPAREN      shift, and go to state 56
+    MINUS       shift, and go to state 57
+    NOT         shift, and go to state 58
+    STRLITERAL  shift, and go to state 59
+    TRUE        shift, and go to state 60
+
+    exp        go to state 109
+    assignExp  go to state 62
+    callExp    go to state 63
+    term       go to state 64
+    lval       go to state 65
+    id         go to state 66
+
+
+State 86
+
+   42 exp: exp EQUALS . exp
+
+    FALSE       shift, and go to state 54
+    ID          shift, and go to state 5
+    INTLITERAL  shift, and go to state 55
+    LPAREN      shift, and go to state 56
+    MINUS       shift, and go to state 57
+    NOT         shift, and go to state 58
+    STRLITERAL  shift, and go to state 59
+    TRUE        shift, and go to state 60
+
+    exp        go to state 110
+    assignExp  go to state 62
+    callExp    go to state 63
+    term       go to state 64
+    lval       go to state 65
+    id         go to state 66
+
+
+State 87
+
+   44 exp: exp GREATER . exp
+
+    FALSE       shift, and go to state 54
+    ID          shift, and go to state 5
+    INTLITERAL  shift, and go to state 55
+    LPAREN      shift, and go to state 56
+    MINUS       shift, and go to state 57
+    NOT         shift, and go to state 58
+    STRLITERAL  shift, and go to state 59
+    TRUE        shift, and go to state 60
+
+    exp        go to state 111
+    assignExp  go to state 62
+    callExp    go to state 63
+    term       go to state 64
+    lval       go to state 65
+    id         go to state 66
+
+
+State 88
+
+   45 exp: exp GREATEREQ . exp
+
+    FALSE       shift, and go to state 54
+    ID          shift, and go to state 5
+    INTLITERAL  shift, and go to state 55
+    LPAREN      shift, and go to state 56
+    MINUS       shift, and go to state 57
+    NOT         shift, and go to state 58
+    STRLITERAL  shift, and go to state 59
+    TRUE        shift, and go to state 60
+
+    exp        go to state 112
+    assignExp  go to state 62
+    callExp    go to state 63
+    term       go to state 64
+    lval       go to state 65
+    id         go to state 66
+
+
+State 89
+
+   46 exp: exp LESS . exp
+
+    FALSE       shift, and go to state 54
+    ID          shift, and go to state 5
+    INTLITERAL  shift, and go to state 55
+    LPAREN      shift, and go to state 56
+    MINUS       shift, and go to state 57
+    NOT         shift, and go to state 58
+    STRLITERAL  shift, and go to state 59
+    TRUE        shift, and go to state 60
+
+    exp        go to state 113
+    assignExp  go to state 62
+    callExp    go to state 63
+    term       go to state 64
+    lval       go to state 65
+    id         go to state 66
+
+
+State 90
+
+   47 exp: exp LESSEQ . exp
+
+    FALSE       shift, and go to state 54
+    ID          shift, and go to state 5
+    INTLITERAL  shift, and go to state 55
+    LPAREN      shift, and go to state 56
+    MINUS       shift, and go to state 57
+    NOT         shift, and go to state 58
+    STRLITERAL  shift, and go to state 59
+    TRUE        shift, and go to state 60
+
+    exp        go to state 114
+    assignExp  go to state 62
+    callExp    go to state 63
+    term       go to state 64
+    lval       go to state 65
+    id         go to state 66
+
+
+State 91
+
+   36 exp: exp MINUS . exp
+
+    FALSE       shift, and go to state 54
+    ID          shift, and go to state 5
+    INTLITERAL  shift, and go to state 55
+    LPAREN      shift, and go to state 56
+    MINUS       shift, and go to state 57
+    NOT         shift, and go to state 58
+    STRLITERAL  shift, and go to state 59
+    TRUE        shift, and go to state 60
+
+    exp        go to state 115
+    assignExp  go to state 62
+    callExp    go to state 63
+    term       go to state 64
+    lval       go to state 65
+    id         go to state 66
+
+
+State 92
+
+   43 exp: exp NOTEQUALS . exp
+
+    FALSE       shift, and go to state 54
+    ID          shift, and go to state 5
+    INTLITERAL  shift, and go to state 55
+    LPAREN      shift, and go to state 56
+    MINUS       shift, and go to state 57
+    NOT         shift, and go to state 58
+    STRLITERAL  shift, and go to state 59
+    TRUE        shift, and go to state 60
+
+    exp        go to state 116
+    assignExp  go to state 62
+    callExp    go to state 63
+    term       go to state 64
+    lval       go to state 65
+    id         go to state 66
+
+
+State 93
+
+   41 exp: exp OR . exp
+
+    FALSE       shift, and go to state 54
+    ID          shift, and go to state 5
+    INTLITERAL  shift, and go to state 55
+    LPAREN      shift, and go to state 56
+    MINUS       shift, and go to state 57
+    NOT         shift, and go to state 58
+    STRLITERAL  shift, and go to state 59
+    TRUE        shift, and go to state 60
+
+    exp        go to state 117
+    assignExp  go to state 62
+    callExp    go to state 63
+    term       go to state 64
+    lval       go to state 65
+    id         go to state 66
+
+
+State 94
+
+   37 exp: exp PLUS . exp
+
+    FALSE       shift, and go to state 54
+    ID          shift, and go to state 5
+    INTLITERAL  shift, and go to state 55
+    LPAREN      shift, and go to state 56
+    MINUS       shift, and go to state 57
+    NOT         shift, and go to state 58
+    STRLITERAL  shift, and go to state 59
+    TRUE        shift, and go to state 60
+
+    exp        go to state 118
+    assignExp  go to state 62
+    callExp    go to state 63
+    term       go to state 64
+    lval       go to state 65
+    id         go to state 66
+
+
+State 95
+
+   28 stmt: REPORT exp SEMICOL .
+
+    $default  reduce using rule 28 (stmt)
+
+
+State 96
+
+   38 exp: exp TIMES . exp
+
+    FALSE       shift, and go to state 54
+    ID          shift, and go to state 5
+    INTLITERAL  shift, and go to state 55
+    LPAREN      shift, and go to state 56
+    MINUS       shift, and go to state 57
+    NOT         shift, and go to state 58
+    STRLITERAL  shift, and go to state 59
+    TRUE        shift, and go to state 60
+
+    exp        go to state 119
+    assignExp  go to state 62
+    callExp    go to state 63
+    term       go to state 64
+    lval       go to state 65
+    id         go to state 66
+
+
+State 97
+
+   32 stmt: RETURN exp SEMICOL .
+
+    $default  reduce using rule 32 (stmt)
+
+
+State 98
+
+   31 stmt: WHILE LPAREN exp . RPAREN OPEN stmtList CLOSE
+   36 exp: exp . MINUS exp
+   37    | exp . PLUS exp
+   38    | exp . TIMES exp
+   39    | exp . DIVIDE exp
+   40    | exp . AND exp
+   41    | exp . OR exp
+   42    | exp . EQUALS exp
+   43    | exp . NOTEQUALS exp
+   44    | exp . GREATER exp
+   45    | exp . GREATEREQ exp
+   46    | exp . LESS exp
+   47    | exp . LESSEQ exp
+
+    AND        shift, and go to state 84
+    DIVIDE     shift, and go to state 85
+    EQUALS     shift, and go to state 86
+    GREATER    shift, and go to state 87
+    GREATEREQ  shift, and go to state 88
+    LESS       shift, and go to state 89
+    LESSEQ     shift, and go to state 90
+    MINUS      shift, and go to state 91
+    NOTEQUALS  shift, and go to state 92
+    OR         shift, and go to state 93
+    PLUS       shift, and go to state 94
+    RPAREN     shift, and go to state 120
+    TIMES      shift, and go to state 96
+
+
+State 99
+
+   36 exp: exp . MINUS exp
+   37    | exp . PLUS exp
+   38    | exp . TIMES exp
+   39    | exp . DIVIDE exp
+   40    | exp . AND exp
+   41    | exp . OR exp
+   42    | exp . EQUALS exp
+   43    | exp . NOTEQUALS exp
+   44    | exp . GREATER exp
+   45    | exp . GREATEREQ exp
+   46    | exp . LESS exp
+   47    | exp . LESSEQ exp
+   51 assignExp: lval ASSIGN exp .
+
+    AND        shift, and go to state 84
+    DIVIDE     shift, and go to state 85
+    EQUALS     shift, and go to state 86
+    GREATER    shift, and go to state 87
+    GREATEREQ  shift, and go to state 88
+    LESS       shift, and go to state 89
+    LESSEQ     shift, and go to state 90
+    MINUS      shift, and go to state 91
+    NOTEQUALS  shift, and go to state 92
+    OR         shift, and go to state 93
+    PLUS       shift, and go to state 94
+    TIMES      shift, and go to state 96
+
+    $default  reduce using rule 51 (assignExp)
+
+
+State 100
+
+   25 stmt: lval DEC SEMICOL .
+
+    $default  reduce using rule 25 (stmt)
+
+
+State 101
+
+   26 stmt: lval INC SEMICOL .
+
+    $default  reduce using rule 26 (stmt)
+
+
+State 102
+
+   64 lval: id LBRACE id . RBRACE
+
+    RBRACE  shift, and go to state 121
+
+
+State 103
+
+   52 callExp: id LPAREN RPAREN .
+
+    $default  reduce using rule 52 (callExp)
+
+
+State 104
+
+   36 exp: exp . MINUS exp
+   37    | exp . PLUS exp
+   38    | exp . TIMES exp
+   39    | exp . DIVIDE exp
+   40    | exp . AND exp
+   41    | exp . OR exp
+   42    | exp . EQUALS exp
+   43    | exp . NOTEQUALS exp
+   44    | exp . GREATER exp
+   45    | exp . GREATEREQ exp
+   46    | exp . LESS exp
+   47    | exp . LESSEQ exp
+   54 actualsList: exp .
+
+    AND        shift, and go to state 84
+    DIVIDE     shift, and go to state 85
+    EQUALS     shift, and go to state 86
+    GREATER    shift, and go to state 87
+    GREATEREQ  shift, and go to state 88
+    LESS       shift, and go to state 89
+    LESSEQ     shift, and go to state 90
+    MINUS      shift, and go to state 91
+    NOTEQUALS  shift, and go to state 92
+    OR         shift, and go to state 93
+    PLUS       shift, and go to state 94
+    TIMES      shift, and go to state 96
+
+    $default  reduce using rule 54 (actualsList)
+
+
+State 105
+
+   53 callExp: id LPAREN actualsList . RPAREN
+   55 actualsList: actualsList . COMMA exp
+
+    COMMA   shift, and go to state 122
+    RPAREN  shift, and go to state 123
+
+
+State 106
+
+   29 stmt: IF LPAREN exp RPAREN . OPEN stmtList CLOSE
+   30     | IF LPAREN exp RPAREN . OPEN stmtList CLOSE ELSE OPEN stmtList CLOSE
+
+    OPEN  shift, and go to state 124
+
+
+State 107
+
+   61 term: LPAREN exp RPAREN .
+
+    $default  reduce using rule 61 (term)
+
+
+State 108
+
+   36 exp: exp . MINUS exp
+   37    | exp . PLUS exp
+   38    | exp . TIMES exp
+   39    | exp . DIVIDE exp
+   40    | exp . AND exp
+   40    | exp AND exp .
+   41    | exp . OR exp
+   42    | exp . EQUALS exp
+   43    | exp . NOTEQUALS exp
+   44    | exp . GREATER exp
+   45    | exp . GREATEREQ exp
+   46    | exp . LESS exp
+   47    | exp . LESSEQ exp
+
+    DIVIDE     shift, and go to state 85
+    EQUALS     shift, and go to state 86
+    GREATER    shift, and go to state 87
+    GREATEREQ  shift, and go to state 88
+    LESS       shift, and go to state 89
+    LESSEQ     shift, and go to state 90
+    MINUS      shift, and go to state 91
+    NOTEQUALS  shift, and go to state 92
+    PLUS       shift, and go to state 94
+    TIMES      shift, and go to state 96
+
+    $default  reduce using rule 40 (exp)
+
+
+State 109
+
+   36 exp: exp . MINUS exp
+   37    | exp . PLUS exp
+   38    | exp . TIMES exp
+   39    | exp . DIVIDE exp
+   39    | exp DIVIDE exp .
+   40    | exp . AND exp
+   41    | exp . OR exp
+   42    | exp . EQUALS exp
+   43    | exp . NOTEQUALS exp
+   44    | exp . GREATER exp
+   45    | exp . GREATEREQ exp
+   46    | exp . LESS exp
+   47    | exp . LESSEQ exp
+
+    $default  reduce using rule 39 (exp)
+
+
+State 110
+
+   36 exp: exp . MINUS exp
+   37    | exp . PLUS exp
+   38    | exp . TIMES exp
+   39    | exp . DIVIDE exp
+   40    | exp . AND exp
+   41    | exp . OR exp
+   42    | exp . EQUALS exp
+   42    | exp EQUALS exp .
+   43    | exp . NOTEQUALS exp
+   44    | exp . GREATER exp
+   45    | exp . GREATEREQ exp
+   46    | exp . LESS exp
+   47    | exp . LESSEQ exp
+
+    DIVIDE  shift, and go to state 85
+    MINUS   shift, and go to state 91
+    PLUS    shift, and go to state 94
+    TIMES   shift, and go to state 96
+
+    EQUALS     error (nonassociative)
+    GREATER    error (nonassociative)
+    GREATEREQ  error (nonassociative)
+    LESS       error (nonassociative)
+    LESSEQ     error (nonassociative)
+    NOTEQUALS  error (nonassociative)
+
+    $default  reduce using rule 42 (exp)
+
+
+State 111
+
+   36 exp: exp . MINUS exp
+   37    | exp . PLUS exp
+   38    | exp . TIMES exp
+   39    | exp . DIVIDE exp
+   40    | exp . AND exp
+   41    | exp . OR exp
+   42    | exp . EQUALS exp
+   43    | exp . NOTEQUALS exp
+   44    | exp . GREATER exp
+   44    | exp GREATER exp .
+   45    | exp . GREATEREQ exp
+   46    | exp . LESS exp
+   47    | exp . LESSEQ exp
+
+    DIVIDE  shift, and go to state 85
+    MINUS   shift, and go to state 91
+    PLUS    shift, and go to state 94
+    TIMES   shift, and go to state 96
+
+    EQUALS     error (nonassociative)
+    GREATER    error (nonassociative)
+    GREATEREQ  error (nonassociative)
+    LESS       error (nonassociative)
+    LESSEQ     error (nonassociative)
+    NOTEQUALS  error (nonassociative)
+
+    $default  reduce using rule 44 (exp)
+
+
+State 112
+
+   36 exp: exp . MINUS exp
+   37    | exp . PLUS exp
+   38    | exp . TIMES exp
+   39    | exp . DIVIDE exp
+   40    | exp . AND exp
+   41    | exp . OR exp
+   42    | exp . EQUALS exp
+   43    | exp . NOTEQUALS exp
+   44    | exp . GREATER exp
+   45    | exp . GREATEREQ exp
+   45    | exp GREATEREQ exp .
+   46    | exp . LESS exp
+   47    | exp . LESSEQ exp
+
+    DIVIDE  shift, and go to state 85
+    MINUS   shift, and go to state 91
+    PLUS    shift, and go to state 94
+    TIMES   shift, and go to state 96
+
+    EQUALS     error (nonassociative)
+    GREATER    error (nonassociative)
+    GREATEREQ  error (nonassociative)
+    LESS       error (nonassociative)
+    LESSEQ     error (nonassociative)
+    NOTEQUALS  error (nonassociative)
+
+    $default  reduce using rule 45 (exp)
+
+
+State 113
+
+   36 exp: exp . MINUS exp
+   37    | exp . PLUS exp
+   38    | exp . TIMES exp
+   39    | exp . DIVIDE exp
+   40    | exp . AND exp
+   41    | exp . OR exp
+   42    | exp . EQUALS exp
+   43    | exp . NOTEQUALS exp
+   44    | exp . GREATER exp
+   45    | exp . GREATEREQ exp
+   46    | exp . LESS exp
+   46    | exp LESS exp .
+   47    | exp . LESSEQ exp
+
+    DIVIDE  shift, and go to state 85
+    MINUS   shift, and go to state 91
+    PLUS    shift, and go to state 94
+    TIMES   shift, and go to state 96
+
+    EQUALS     error (nonassociative)
+    GREATER    error (nonassociative)
+    GREATEREQ  error (nonassociative)
+    LESS       error (nonassociative)
+    LESSEQ     error (nonassociative)
+    NOTEQUALS  error (nonassociative)
+
+    $default  reduce using rule 46 (exp)
+
+
+State 114
+
+   36 exp: exp . MINUS exp
+   37    | exp . PLUS exp
+   38    | exp . TIMES exp
+   39    | exp . DIVIDE exp
+   40    | exp . AND exp
+   41    | exp . OR exp
+   42    | exp . EQUALS exp
+   43    | exp . NOTEQUALS exp
+   44    | exp . GREATER exp
+   45    | exp . GREATEREQ exp
+   46    | exp . LESS exp
+   47    | exp . LESSEQ exp
+   47    | exp LESSEQ exp .
+
+    DIVIDE  shift, and go to state 85
+    MINUS   shift, and go to state 91
+    PLUS    shift, and go to state 94
+    TIMES   shift, and go to state 96
+
+    EQUALS     error (nonassociative)
+    GREATER    error (nonassociative)
+    GREATEREQ  error (nonassociative)
+    LESS       error (nonassociative)
+    LESSEQ     error (nonassociative)
+    NOTEQUALS  error (nonassociative)
+
+    $default  reduce using rule 47 (exp)
+
+
+State 115
+
+   36 exp: exp . MINUS exp
+   36    | exp MINUS exp .
+   37    | exp . PLUS exp
+   38    | exp . TIMES exp
+   39    | exp . DIVIDE exp
+   40    | exp . AND exp
+   41    | exp . OR exp
+   42    | exp . EQUALS exp
+   43    | exp . NOTEQUALS exp
+   44    | exp . GREATER exp
+   45    | exp . GREATEREQ exp
+   46    | exp . LESS exp
+   47    | exp . LESSEQ exp
+
+    DIVIDE  shift, and go to state 85
+    TIMES   shift, and go to state 96
+
+    $default  reduce using rule 36 (exp)
+
+
+State 116
+
+   36 exp: exp . MINUS exp
+   37    | exp . PLUS exp
+   38    | exp . TIMES exp
+   39    | exp . DIVIDE exp
+   40    | exp . AND exp
+   41    | exp . OR exp
+   42    | exp . EQUALS exp
+   43    | exp . NOTEQUALS exp
+   43    | exp NOTEQUALS exp .
+   44    | exp . GREATER exp
+   45    | exp . GREATEREQ exp
+   46    | exp . LESS exp
+   47    | exp . LESSEQ exp
+
+    DIVIDE  shift, and go to state 85
+    MINUS   shift, and go to state 91
+    PLUS    shift, and go to state 94
+    TIMES   shift, and go to state 96
+
+    EQUALS     error (nonassociative)
+    GREATER    error (nonassociative)
+    GREATEREQ  error (nonassociative)
+    LESS       error (nonassociative)
+    LESSEQ     error (nonassociative)
+    NOTEQUALS  error (nonassociative)
+
+    $default  reduce using rule 43 (exp)
+
+
+State 117
+
+   36 exp: exp . MINUS exp
+   37    | exp . PLUS exp
+   38    | exp . TIMES exp
+   39    | exp . DIVIDE exp
+   40    | exp . AND exp
+   41    | exp . OR exp
+   41    | exp OR exp .
+   42    | exp . EQUALS exp
+   43    | exp . NOTEQUALS exp
+   44    | exp . GREATER exp
+   45    | exp . GREATEREQ exp
+   46    | exp . LESS exp
+   47    | exp . LESSEQ exp
+
+    AND        shift, and go to state 84
+    DIVIDE     shift, and go to state 85
+    EQUALS     shift, and go to state 86
+    GREATER    shift, and go to state 87
+    GREATEREQ  shift, and go to state 88
+    LESS       shift, and go to state 89
+    LESSEQ     shift, and go to state 90
+    MINUS      shift, and go to state 91
+    NOTEQUALS  shift, and go to state 92
+    PLUS       shift, and go to state 94
+    TIMES      shift, and go to state 96
+
+    $default  reduce using rule 41 (exp)
+
+
+State 118
+
+   36 exp: exp . MINUS exp
+   37    | exp . PLUS exp
+   37    | exp PLUS exp .
+   38    | exp . TIMES exp
+   39    | exp . DIVIDE exp
+   40    | exp . AND exp
+   41    | exp . OR exp
+   42    | exp . EQUALS exp
+   43    | exp . NOTEQUALS exp
+   44    | exp . GREATER exp
+   45    | exp . GREATEREQ exp
+   46    | exp . LESS exp
+   47    | exp . LESSEQ exp
+
+    DIVIDE  shift, and go to state 85
+    TIMES   shift, and go to state 96
+
+    $default  reduce using rule 37 (exp)
+
+
+State 119
+
+   36 exp: exp . MINUS exp
+   37    | exp . PLUS exp
+   38    | exp . TIMES exp
+   38    | exp TIMES exp .
+   39    | exp . DIVIDE exp
+   40    | exp . AND exp
+   41    | exp . OR exp
+   42    | exp . EQUALS exp
+   43    | exp . NOTEQUALS exp
+   44    | exp . GREATER exp
+   45    | exp . GREATEREQ exp
+   46    | exp . LESS exp
+   47    | exp . LESSEQ exp
+
+    $default  reduce using rule 38 (exp)
+
+
+State 120
+
+   31 stmt: WHILE LPAREN exp RPAREN . OPEN stmtList CLOSE
+
+    OPEN  shift, and go to state 125
+
+
+State 121
+
+   64 lval: id LBRACE id RBRACE .
+
+    $default  reduce using rule 64 (lval)
+
+
+State 122
+
+   55 actualsList: actualsList COMMA . exp
+
+    FALSE       shift, and go to state 54
+    ID          shift, and go to state 5
+    INTLITERAL  shift, and go to state 55
+    LPAREN      shift, and go to state 56
+    MINUS       shift, and go to state 57
+    NOT         shift, and go to state 58
+    STRLITERAL  shift, and go to state 59
+    TRUE        shift, and go to state 60
+
+    exp        go to state 126
+    assignExp  go to state 62
+    callExp    go to state 63
+    term       go to state 64
+    lval       go to state 65
+    id         go to state 66
+
+
+State 123
+
+   53 callExp: id LPAREN actualsList RPAREN .
+
+    $default  reduce using rule 53 (callExp)
+
+
+State 124
+
+   29 stmt: IF LPAREN exp RPAREN OPEN . stmtList CLOSE
+   30     | IF LPAREN exp RPAREN OPEN . stmtList CLOSE ELSE OPEN stmtList CLOSE
+
+    $default  reduce using rule 21 (stmtList)
+
+    stmtList  go to state 127
+
+
+State 125
+
+   31 stmt: WHILE LPAREN exp RPAREN OPEN . stmtList CLOSE
+
+    $default  reduce using rule 21 (stmtList)
+
+    stmtList  go to state 128
+
+
+State 126
+
+   36 exp: exp . MINUS exp
+   37    | exp . PLUS exp
+   38    | exp . TIMES exp
+   39    | exp . DIVIDE exp
+   40    | exp . AND exp
+   41    | exp . OR exp
+   42    | exp . EQUALS exp
+   43    | exp . NOTEQUALS exp
+   44    | exp . GREATER exp
+   45    | exp . GREATEREQ exp
+   46    | exp . LESS exp
+   47    | exp . LESSEQ exp
+   55 actualsList: actualsList COMMA exp .
+
+    AND        shift, and go to state 84
+    DIVIDE     shift, and go to state 85
+    EQUALS     shift, and go to state 86
+    GREATER    shift, and go to state 87
+    GREATEREQ  shift, and go to state 88
+    LESS       shift, and go to state 89
+    LESSEQ     shift, and go to state 90
+    MINUS      shift, and go to state 91
+    NOTEQUALS  shift, and go to state 92
+    OR         shift, and go to state 93
+    PLUS       shift, and go to state 94
+    TIMES      shift, and go to state 96
+
+    $default  reduce using rule 55 (actualsList)
+
+
+State 127
+
+   22 stmtList: stmtList . stmt
+   29 stmt: IF LPAREN exp RPAREN OPEN stmtList . CLOSE
+   30     | IF LPAREN exp RPAREN OPEN stmtList . CLOSE ELSE OPEN stmtList CLOSE
+
+    BOOL     shift, and go to state 4
+    CLOSE    shift, and go to state 129
+    ID       shift, and go to state 5
+    IF       shift, and go to state 39
+    INT      shift, and go to state 6
+    RECEIVE  shift, and go to state 40
+    REPORT   shift, and go to state 41
+    RETURN   shift, and go to state 42
+    STRING   shift, and go to state 8
+    VOID     shift, and go to state 9
+    WHILE    shift, and go to state 43
+
+    varDecl    go to state 44
+    type       go to state 23
+    stmt       go to state 45
+    assignExp  go to state 46
+    callExp    go to state 47
+    lval       go to state 48
+    id         go to state 49
+
+
+State 128
+
+   22 stmtList: stmtList . stmt
+   31 stmt: WHILE LPAREN exp RPAREN OPEN stmtList . CLOSE
+
+    BOOL     shift, and go to state 4
+    CLOSE    shift, and go to state 130
+    ID       shift, and go to state 5
+    IF       shift, and go to state 39
+    INT      shift, and go to state 6
+    RECEIVE  shift, and go to state 40
+    REPORT   shift, and go to state 41
+    RETURN   shift, and go to state 42
+    STRING   shift, and go to state 8
+    VOID     shift, and go to state 9
+    WHILE    shift, and go to state 43
+
+    varDecl    go to state 44
+    type       go to state 23
+    stmt       go to state 45
+    assignExp  go to state 46
+    callExp    go to state 47
+    lval       go to state 48
+    id         go to state 49
+
+
+State 129
+
+   29 stmt: IF LPAREN exp RPAREN OPEN stmtList CLOSE .
+   30     | IF LPAREN exp RPAREN OPEN stmtList CLOSE . ELSE OPEN stmtList CLOSE
+
+    ELSE  shift, and go to state 131
+
+    $default  reduce using rule 29 (stmt)
+
+
+State 130
+
+   31 stmt: WHILE LPAREN exp RPAREN OPEN stmtList CLOSE .
+
+    $default  reduce using rule 31 (stmt)
+
+
+State 131
+
+   30 stmt: IF LPAREN exp RPAREN OPEN stmtList CLOSE ELSE . OPEN stmtList CLOSE
+
+    OPEN  shift, and go to state 132
+
+
+State 132
+
+   30 stmt: IF LPAREN exp RPAREN OPEN stmtList CLOSE ELSE OPEN . stmtList CLOSE
+
+    $default  reduce using rule 21 (stmtList)
+
+    stmtList  go to state 133
+
+
+State 133
+
+   22 stmtList: stmtList . stmt
+   30 stmt: IF LPAREN exp RPAREN OPEN stmtList CLOSE ELSE OPEN stmtList . CLOSE
+
+    BOOL     shift, and go to state 4
+    CLOSE    shift, and go to state 134
+    ID       shift, and go to state 5
+    IF       shift, and go to state 39
+    INT      shift, and go to state 6
+    RECEIVE  shift, and go to state 40
+    REPORT   shift, and go to state 41
+    RETURN   shift, and go to state 42
+    STRING   shift, and go to state 8
+    VOID     shift, and go to state 9
+    WHILE    shift, and go to state 43
+
+    varDecl    go to state 44
+    type       go to state 23
+    stmt       go to state 45
+    assignExp  go to state 46
+    callExp    go to state 47
+    lval       go to state 48
+    id         go to state 49
+
+
+State 134
+
+   30 stmt: IF LPAREN exp RPAREN OPEN stmtList CLOSE ELSE OPEN stmtList CLOSE .
+
+    $default  reduce using rule 30 (stmt)
